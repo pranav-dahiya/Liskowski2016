@@ -1,9 +1,9 @@
 from patch import Patch
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
-from keras.regulizer import l2
-from keras.initializer import normal
-from keras.optimizer import SGD
+from keras.regularizers import l2
+from keras.initializers import normal
+from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 def schedule(epoch,old_rate):
@@ -27,6 +27,6 @@ model.add(Dense(512,activation='relu',kernel_initializer=normal(0,0.01),kernel_r
 model.add(Dropout(0.5))
 model.add(Dense(2,activation='sigmoid',kernel_initializer=normal(0,0.01)))
 
-model.compile(optimizer.SGD(lr=0.001,momentum=0.9),loss='categorical_crossentropy',metrics=['accuracy'])
+model.compile(SGD(lr=0.001,momentum=0.9),loss='categorical_crossentropy',metrics=['accuracy'])
 model.fit(x_train,y_train,batch_size=256,epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('plain_checkpoint.keras')])
 model.save('plain.keras')
