@@ -5,15 +5,19 @@ from keras.regularizers import l2
 from keras.initializers import normal
 from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+from keras.preprocessing.image import ImageDataGenerator
 
-x_train = np.load('x_train.npy')
-y_train = np.load('y_train.npy')
+x_train = np.load('Data/x_train.npy')
+y_train = np.load('Data/y_train.npy')
 
 def schedule(epoch,old_rate):
     if epoch%6 == 0:
         return old_rate/10
     else:
         return old_rate
+
+datagen = ImageDataGenerator(featurewise_center=True,featurewise_std_normalization=True) #GCN
+datagen.fit(x_train)
 
 model = Sequential()
 
@@ -31,5 +35,5 @@ model.add(Dropout(0.5))
 model.add(Dense(2,activation='sigmoid',kernel_initializer=normal(0,0.01)))
 
 model.compile(SGD(lr=0.001,momentum=0.9),loss='categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train,y_train,batch_size=256,epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('plain_checkpoint.keras')])
-model.save('plain.keras')
+model.fit_generator(datagen.flow(x_train,y_train,batch_size=256),steps_per_epoch=int(x_train.shape[0]/256),epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('gcn_checkpoint.keras')])
+model.save('gcn.keras')
