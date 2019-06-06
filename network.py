@@ -7,8 +7,8 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
-x_train = np.load('Data/x_train.npy')
-y_train = np.load('Data/y_train.npy')
+x_train = np.load('data/x_train.npy')
+y_train = np.load('data/y_train.npy')
 
 def schedule(epoch,old_rate):
     if epoch%6 == 0:
