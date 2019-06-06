@@ -1,5 +1,2 @@
 DRIVE/
-x_train.npy
-x_test.npy
-y_train.npy
-y_test.npy
+Data/
