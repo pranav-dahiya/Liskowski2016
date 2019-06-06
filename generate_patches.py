@@ -18,5 +18,5 @@ for i in range(20):
         except ValueError:
             j -= 1
 
-np.save('x_test.npy',x)
-np.save('y_test.npy',y)
+np.save('data/x_test.npy',x)
+np.save('data/y_test.npy',y)

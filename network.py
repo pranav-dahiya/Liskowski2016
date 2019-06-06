@@ -35,5 +35,6 @@ model.add(Dropout(0.5))
 model.add(Dense(2,activation='sigmoid',kernel_initializer=normal(0,0.01)))
 
 model.compile(SGD(lr=0.001,momentum=0.9),loss='categorical_crossentropy',metrics=['accuracy'])
+#model.fit(x_train,y_train,batch_size=256,epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('plain_checkpoint.keras')])
 model.fit_generator(datagen.flow(x_train,y_train,batch_size=256),steps_per_epoch=int(x_train.shape[0]/256),epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('gcn_checkpoint.keras')])
 model.save('gcn.keras')
