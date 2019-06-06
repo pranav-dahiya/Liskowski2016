@@ -2,14 +2,11 @@ import cv2
 import numpy as np
 
 class Patch:
-    def __init__(self,fname):
+    def __init__(self,I,J,mask):
         while True:
-            x = np.random.randint(920)
-            y = np.random.randint(920)
-            if (x-460)**2 + (y-460)**2 < 460**2:
+            x = np.random.randint(584)
+            y = np.random.randint(565)
+            if mask[x,y] == 255:
                 break
-        I = cv2.imread(fname+".jpg")
-        self.data = I[x+20:x+47,y+8:y+35,:]
-        J = cv2.imread(fname+"_1stHO.png")
-        print(J[x+33,y+21,:])
-        self.label = np.sum(J[x+33,y+21,:])>0
+        self.data = I[x-13:x+14,y-13:y+14,:]
+        self.label = int(J[x,y]==255)

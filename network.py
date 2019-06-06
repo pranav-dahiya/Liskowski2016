@@ -1,10 +1,13 @@
-from patch import Patch
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
 from keras.regularizers import l2
 from keras.initializers import normal
 from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+
+x_train = np.load('x_train.npy')
+y_train = np.load('y_train.npy')
 
 def schedule(epoch,old_rate):
     if epoch%6 == 0:
