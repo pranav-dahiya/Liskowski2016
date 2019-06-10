@@ -32,3 +32,7 @@ x_zca = np.memmap('data/x_zca_train.npy',dtype=np.uint8,mode='write',shape=shape
 for i, I in tqdm(enumerate(x)):
     x_gcn[i] = GCN(I)
     x_zca[i] = ZCA_whitening(x_gcn[i])
+
+del x
+del x_gcn
+del x_zca
