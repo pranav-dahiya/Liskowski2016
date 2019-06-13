@@ -1,4 +1,3 @@
-import metrics
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
@@ -8,8 +7,12 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
-x_train = np.memmap('data/x_train.npy',dtype=np.uint8,shape=(400000,27,27,3))
+x_train = np.memmap('data/x_zca_train.npy',dtype=np.float32,shape=(400000,49,49,3))
 y_train = np.memmap('data/y_train.npy',dtype=np.uint8,shape=(400000,2))
+
+x_train = x_train[:,11:38,11:38,:]
+
+print(x_train.shape)
 
 def schedule(epoch,old_rate):
     if epoch == 6 or epoch == 12 or epoch == 18:
@@ -33,5 +36,5 @@ model.add(Dropout(0.5))
 model.add(Dense(2,activation='sigmoid',kernel_initializer=normal(0,0.01)))
 
 model.compile(SGD(lr=0.001,momentum=0.9),loss='categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train,y_train,batch_size=256,epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('plain_checkpoint.keras')])
-model.save('plain.keras')
+model.fit(x_train,y_train,batch_size=256,epochs=19,callbacks=[LearningRateScheduler(schedule,verbose=1),ModelCheckpoint('zca_checkpoint.keras')])
+model.save('zca.keras')

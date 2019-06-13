@@ -1,14 +1,21 @@
 import cv2
 import numpy as np
+from PIL import Image
 from patch import Patch
 
-x = np.memmap('data/x_test.npy',dtype=np.uint8,mode='write',shape=(400000,27,27,3))
-y = np.memmap('data/y_test.npy',dtype=np.uint8,mode='write',shape=(400000,2))
+x = np.memmap('data/x_test.npy',dtype=np.uint8,mode='w+',shape=(400000,27,27,3))
+y = np.memmap('data/y_test.npy',dtype=np.uint8,mode='w+',shape=(400000,2))
+
+#x = np.memmap('data/x_test.npy',dtype=np.uint8,mode='write',shape=(400000,27,27,3))
+#y = np.memmap('data/y_test.npy',dtype=np.uint8,mode='write',shape=(400000,2))
 
 for i in range(20):
-    I = cv2.imread('DRIVE/test/images/'+format(i+1,'02d')+'_test.tif')
-    J = cv2.imread('DRIVE/test/1st_manual/'+format(i+1,'02d')+'_manual1.tif',0)
-    mask = cv2.imread('DRIVE/test/mask/'+format(i+1,'02d')+'_test_mask.tif',0)
+    #I = np.array(Image.open('DRIVE/training/images/'+format(i+21,'02d')+'_training.tif'))
+    #J = np.array(Image.open('DRIVE/training/1st_manual/'+format(i+21,'02d')+'_manual1.tif'))
+    #mask = np.array(Image.open('DRIVE/training/mask/'+format(i+21,'02d')+'_training_mask.tif'))
+    I = np.array(Image.open('DRIVE/test/images/'+format(i+1,'02d')+'_test.tif'))
+    J = np.array(Image.open('DRIVE/test/1st_manual/'+format(i+1,'02d')+'_manual1.tif'))
+    mask = np.array(Image.open('DRIVE/test/mask/'+format(i+1,'02d')+'_test_mask.tif'))
     print(i)
     for j in range(20000):
         index = i*20000+j
