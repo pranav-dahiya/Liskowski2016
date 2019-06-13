@@ -69,6 +69,10 @@ def augmentation(I):
 
 shape = (400000, 27, 27, 3)
 
+if (os.path.exists('data/x_gcn_test.npy')):
+    if(input("File exists. Do you want to overwrite?[y,N]") != "y"):
+        exit()
+
 x = np.memmap('data/x_test.npy', dtype=np.uint8, shape=shape)
 x_gcn = np.memmap('data/x_gcn_test.npy', dtype=np.float32,mode='w+', shape=shape)
 
