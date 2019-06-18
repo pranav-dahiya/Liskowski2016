@@ -1,10 +1,11 @@
 An implementation of Liskowski, Kraweic using python
 
-##Results
+## Results
 
-###DRIVE
+### DRIVE
 
 **PLAIN**
+
 AUC:     0.9629045906193028
 acc:     0.94776
 kappa:   0.7638496485319715
@@ -13,6 +14,7 @@ spec:    0.9811065817798745
 Time taken:  61.738539695739746
 
 **GCN**
+
 AUC:     0.9517738469596481
 acc:     0.94225
 kappa:   0.7383829575183756
@@ -21,6 +23,7 @@ spec:    0.9812611642925846
 Time taken:  66.83781695365906
 
 **ZCA**
+
 AUC:     0.9459967991463226
 acc:     0.93767
 kappa:   0.717858476580624
