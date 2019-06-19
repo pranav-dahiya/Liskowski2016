@@ -7,8 +7,8 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
-x_train = np.memmap('data/x_zca_train.npy', dtype=np.float32, shape=(400000, 27, 27, 3))
-y_train = np.memmap('data/y_train.npy', dtype=np.uint8, shape=(400000, 2))
+x_train = np.memmap('data/x_augment_train.npy', dtype=np.float32, mode='r', shape=(4400000, 27, 27, 3))
+y_train = np.memmap('data/y_augment_train.npy', dtype=np.uint8, mode='r', shape=(4400000, 2))
 
 print(x_train.shape)
 
@@ -34,5 +34,5 @@ model.add(Dropout(0.5))
 model.add(Dense(2, activation='sigmoid', kernel_initializer=normal(0, 0.01)))
 
 model.compile(SGD(lr=0.001, momentum=0.9), loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=256, epochs=19, callbacks=[LearningRateScheduler(schedule, verbose=1), ModelCheckpoint('zca_checkpoint.keras')])
-model.save('zca.keras')
+model.fit(x_train, y_train, batch_size=256, epochs=19, callbacks=[LearningRateScheduler(schedule, verbose=1), ModelCheckpoint('augment_checkpoint.keras')])
+model.save('augment.keras')
