@@ -7,10 +7,8 @@ from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
-x_train = np.memmap('data/x_augment_train.npy', dtype=np.float32, mode='r', shape=(4400000, 27, 27, 3))
-y_train = np.memmap('data/y_augment_train.npy', dtype=np.uint8, mode='r', shape=(4400000, 2))
-
-print(x_train.shape)
+x_train = np.memmap('data/x_gcn_train.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
+y_train = np.memmap('data/y_train.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
 
 def schedule(epoch, old_rate):
     if epoch == 6 or epoch == 12 or epoch == 18:
