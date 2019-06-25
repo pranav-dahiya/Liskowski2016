@@ -51,6 +51,7 @@ if (os.path.exists('data/x_gcn_train.npy')):
 #Perform Global Contrast Normalization
 x = np.memmap('data/x_train.npy', dtype=np.uint8, mode='r', shape=(400000, 49, 49, 3))
 x_gcn = np.memmap('data/x_gcn_augment.npy', dtype=np.float32, mode='w+', shape=shape)
+#x = x[:,11:38,11:38,:]
 
 print("Applying GCN:")
 for i, I in tqdm(enumerate(x)):
@@ -82,6 +83,7 @@ for i in tqdm(range(100)):
 print(5)
 del x_flat
 del x_zca
+
 
 if (os.path.exists('data/x_augment_train.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") != "y"):
