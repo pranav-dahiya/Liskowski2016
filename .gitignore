@@ -1,5 +1,7 @@
 DRIVE/
 Data (HDD)/
+Data-1/
+Data-2/
 data
 test.py
 *.keras
