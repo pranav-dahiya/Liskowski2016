@@ -54,10 +54,10 @@ def compute_metrics(y_true, y_pred):
 
 start_time = time.time()
 
-x = np.memmap('Data-2/x_test.npy', dtype=np.uint8, shape=(400000,27,27,3))
+x = np.memmap('Data-2/x_gcn_test.npy', dtype=np.float32, shape=(400000,27,27,3))
 y = np.memmap('Data-2/y_test.npy', dtype=np.uint8, shape=(400000,2))
 
-model = load_model('Data-2/nopool.keras')
+model = load_model('data/gcn.keras')
 
 y_pred = model.predict(x)
 auc = metrics.roc_auc_score(y, y_pred)
