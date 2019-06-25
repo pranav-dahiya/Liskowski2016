@@ -5,8 +5,8 @@ import time
 import tensorflow as tf
 from keras import backend as K
 
-CPU = False
-GPU = True
+CPU = True
+GPU = False
 
 num_cores = 10
 
