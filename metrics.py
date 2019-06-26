@@ -4,13 +4,12 @@ from sklearn import metrics
 import time
 import tensorflow as tf
 from keras import backend as K
-
-config = tf.ConfigProto(
-        device_count = {'GPU': 0}
-    )
+'''
+config = tf.ConfigProto(intra_op_parallelism_threads=10, inter_op_parallelism_threads=10, \
+                        allow_soft_placement=True, device_count = {'CPU': 1, 'GPU': 0})
 sess = tf.Session(config=config)
 K.set_session(sess)
-
+'''
 def compute_metrics(y_true, y_pred):
     TP,TN,FP,FN = 0,0,0,0
     p = np.sum(y_true[:,0])/y_true.shape[0]
@@ -41,10 +40,11 @@ def compute_metrics(y_true, y_pred):
 
 start_time = time.time()
 
-x = np.memmap('Data-3/x_zca_test.npy', dtype=np.float32, mode='r', shape=(400000,27,27,3))
-y = np.memmap('Data-3/y_test.npy', dtype=np.uint8, mode='r', shape=(400000,2))
+x = np.memmap('data/x_test.npy', dtype=np.uint8, mode='r', shape=(400000,27,27,3))
+y = np.memmap('data/y_test.npy', dtype=np.uint8, mode='r', shape=(400000,2))
+#x = x[:,11:38,11:38,:]
 
-model = load_model('Data-3/zca.keras')
+model = load_model('data/nopool.keras')
 
 y_pred = model.predict(x)
 auc = metrics.roc_auc_score(y, y_pred)
