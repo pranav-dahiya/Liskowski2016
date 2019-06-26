@@ -6,9 +6,10 @@ from keras.initializers import normal
 from keras.optimizers import SGD
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
+import os
 
-model_name = 'zca'
-x_train = np.memmap('data/x_zca_train.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
+model_name = 'gcn'
+x_train = np.memmap('data/x_gcn_train.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
 y_train = np.memmap('data/y_train.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
 #x_train = x_train[:,11:38,11:38,:]
 
@@ -38,3 +39,5 @@ model.compile(SGD(lr=0.001, momentum=0.9), loss='categorical_crossentropy', metr
 #model = load_model('nopool_checkpoint.keras')
 model.fit(x_train, y_train, batch_size=256, epochs=19, callbacks=[LearningRateScheduler(schedule, verbose=1), ModelCheckpoint('data/'+model_name+'_checkpoint.keras')])
 model.save('data/'+model_name+'.keras')
+
+os.remove('data/'+model_name+'_checkpoint.keras')

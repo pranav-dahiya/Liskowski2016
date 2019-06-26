@@ -7,9 +7,6 @@ from numpy import linalg
 from numpy.random import rand
 from tqdm import tqdm
 
-def normalize(I):
-    return (I-np.min(I))/(np.max(I)-np.min(I))
-
 
 def augmentation(I):
     out = np.zeros((11,27,27,3), dtype=np.float32)
@@ -40,25 +37,42 @@ def augmentation(I):
     out /= 255
     return out
 
-shape = (400000, 49, 49, 3)
+
+def ZCA_whitening(x_flat, x_zca):
+    print(1)
+    sigma = np.dot(x_flat.T, x_flat)/x_flat.shape[0]
+    print(2)
+    u, s, _ = linalg.svd(sigma)
+    print(3)
+    principal_components = np.dot(np.dot(u, np.diag(1/np.sqrt(s+10e-7))), u.T)
+    print(4)
+    for i in tqdm(range(100)):
+        x_zca[i*4000:(i+1)*4000,:] = np.dot(x_flat[i*4000:(i+1)*4000,:], principal_components)
+    print(5)
+
+
+def GCN(x, x_gcn):
+    for i, I in tqdm(enumerate(x)):
+        for channel in range(I.shape[2]):
+            Ic = I[:,:,channel].astype(np.float32)
+            Ic = (Ic-np.mean(Ic))/max(np.std(Ic), 0.0000001)
+            x_gcn[i,:,:,channel] = Ic
+
+'''
+shape = (400000, 27, 27, 3)
 flat_shape = (400000, shape[1]*shape[2]*shape[3])
 
 if (os.path.exists('data/x_gcn_train.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") != "y"):
         exit()
 
-
 #Perform Global Contrast Normalization
 x = np.memmap('data/x_train.npy', dtype=np.uint8, mode='r', shape=(400000, 49, 49, 3))
-x_gcn = np.memmap('data/x_gcn_augment.npy', dtype=np.float32, mode='w+', shape=shape)
-#x = x[:,11:38,11:38,:]
+x_gcn = np.memmap('data/x_gcn_train.npy', dtype=np.float32, mode='w+', shape=shape)
+x = x[:,11:38,11:38,:]
 
 print("Applying GCN:")
-for i, I in tqdm(enumerate(x)):
-    for channel in range(I.shape[2]):
-        Ic = I[:,:,channel].astype(np.float32)
-        Ic = (Ic-np.mean(Ic))/max(np.std(Ic), 0.0000001)
-        x_gcn[i,:,:,channel] = Ic
+GCN(x, x_gcn)
 del x
 del x_gcn
 
@@ -66,35 +80,59 @@ if (os.path.exists('data/x_zca_train.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") != "y"):
         exit()
 
-
 #Perform ZCA whitening
-x_flat = np.memmap('data/x_gcn_augment.npy', dtype=np.float32, mode='r', shape=flat_shape)
-x_zca = np.memmap('data/x_zca_augment.npy', dtype=np.float32, mode='w+', shape=flat_shape)
+x_flat = np.memmap('data/x_gcn_train.npy', dtype=np.float32, mode='r', shape=flat_shape)
+x_zca = np.memmap('data/x_zca_train.npy', dtype=np.float32, mode='w+', shape=flat_shape)
 
-print(1)
-sigma = np.dot(x_flat.T, x_flat)/x_flat.shape[0]
-print(2)
-u, s, _ = linalg.svd(sigma)
-print(3)
-principal_components = np.dot(np.dot(u, np.diag(1/np.sqrt(s+10e-7))), u.T)
-print(4)
-for i in tqdm(range(100)):
-    x_zca[i*4000:(i+1)*4000,:] = np.dot(x_flat[i*4000:(i+1)*4000,:], principal_components)
-print(5)
+print("Applying ZCA:")
+ZCA_whitening(x_flat, x_zca)
 del x_flat
 del x_zca
+
+#Augmentation
+shape = (400000, 49, 49, 3)
+flat_shape = (400000, shape[1]*shape[2]*shape[3])
 
 
 if (os.path.exists('data/x_augment_train.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") != "y"):
         exit()
 
-x_zca = np.memmap('data/x_zca_augment.npy', dtype=np.float32, mode='r', shape=shape)
+print("Appyling augmentation:")
+
+#Perform Global Contrast Normalization
+x = np.memmap('data/x_train.npy', dtype=np.uint8, mode='r', shape=(400000, 49, 49, 3))
+x_gcn = np.memmap('data/x_gcn_augmentation.npy', dtype=np.float32, mode='w+', shape=shape)
+
+print("Applying GCN:")
+GCN(x, x_gcn)
+del x
+del x_gcn
+
+#Perform ZCA whitening
+x_flat = np.memmap('data/x_gcn_augmentation.npy', dtype=np.float32, mode='r', shape=flat_shape)
+x_zca = np.memmap('data/x_zca_augmentation.npy', dtype=np.float32, mode='w+', shape=flat_shape)
+
+print("Applying ZCA:")
+ZCA_whitening(x_flat, x_zca)
+del x_flat
+del x_zca
+
+os.remove('data/x_gcn_augmentation.npy')
+
+print("Generating augmentated data:")
+
+x_zca = np.memmap('data/x_zca_augmentation.npy', dtype=np.float32, mode='r', shape=(400000, 49, 49, 3))
 x_augment = np.memmap('data/x_augment_train.npy', dtype=np.float32, mode='w+', shape=(4400000, 27, 27, 3))
 for i, I in tqdm(enumerate(x_zca)):
     x_augment[i*11:(i+1)*11,:,:,:] = augmentation(I)
 del x_zca
 del x_augment
+
+os.remove('data/x_zca_augmentation.npy')
+'''
+
+print("Generating augmented labels:")
 
 y = np.memmap('data/y_train.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
 y_augment = np.memmap('data/y_augment_train.npy', dtype=np.uint8, mode='w+', shape=(4400000, 2))

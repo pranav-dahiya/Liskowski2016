@@ -13,8 +13,8 @@ flat_shape = (400000, shape[1]*shape[2]*shape[3])
 
 def GCN():
     #Perform Global Contrast Normalization
-    x = np.memmap('data/x_test.npy', dtype=np.uint8, mode='r', shape=shape)
-    x_gcn = np.memmap('data/x_gcn_test.npy', dtype=np.float32, mode='w+', shape=shape)
+    x = np.memmap('Data-3/x_test.npy', dtype=np.uint8, mode='r', shape=shape)
+    x_gcn = np.memmap('Data-3/x_gcn_test.npy', dtype=np.float32, mode='w+', shape=shape)
 
     for i, I in tqdm(enumerate(x)):
         for channel in range(I.shape[2]):
@@ -27,8 +27,8 @@ def GCN():
 
 def ZCA_whitening():
     #Perform ZCA whitening
-    x_flat = np.memmap('data/x_gcn_test.npy', dtype=np.float32, mode='r', shape=flat_shape)
-    x_zca = np.memmap('data/x_zca_test.npy', dtype=np.float32, mode='w+', shape=flat_shape)
+    x_flat = np.memmap('Data-3/x_gcn_test.npy', dtype=np.float32, mode='r', shape=flat_shape)
+    x_zca = np.memmap('Data-3/x_zca_test.npy', dtype=np.float32, mode='w+', shape=flat_shape)
 
     print(1)
     sigma = np.dot(x_flat.T, x_flat)/x_flat.shape[0]
@@ -45,14 +45,14 @@ def ZCA_whitening():
 
 
 print("Performing GCN")
-if (os.path.exists('data/x_gcn_test.npy')):
+if (os.path.exists('Data-3/x_gcn_test.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") == "y"):
         GCN()
 else:
     GCN()
 
 print("Performing ZCA whitening")
-if (os.path.exists('data/x_zca_test.npy')):
+if (os.path.exists('Data-3/x_zca_test.npy')):
     if(input("File exists. Do you want to overwrite?[y,N] ") == "y"):
         ZCA_whitening()
 else:
