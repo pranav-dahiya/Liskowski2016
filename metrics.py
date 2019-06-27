@@ -38,19 +38,29 @@ def compute_metrics(y_true, y_pred):
     kappa = (acc-acc_r)/(1-acc_r)
     return acc, sens, spec, kappa
 
-start_time = time.time()
 
-x = np.memmap('data/x_test.npy', dtype=np.uint8, mode='r', shape=(400000,27,27,3))
-y = np.memmap('data/y_test.npy', dtype=np.uint8, mode='r', shape=(400000,2))
-#x = x[:,11:38,11:38,:]
+def print_metrics(model_name, x, y):
+    model = load_model('Data-5/'+model_name+'.keras')
+    y_pred = model.predict(x)
+    auc = metrics.roc_auc_score(y, y_pred)
+    acc, sens, spec, kappa = compute_metrics(y,y_pred)
+    with open('Data-6/metrics.log', 'a') as f:
+        f.write(model_name+"\nAUC:\t"+str(auc)+"\nAcc:\t"+str(acc)+"\nKappa:\t"\
+                    +str(kappa)+"\nSens:\t"+str(sens)+"\nSpec:\t"+str(spec)+"\n")
 
-model = load_model('data/nopool.keras')
+num = '7'
 
-y_pred = model.predict(x)
-auc = metrics.roc_auc_score(y, y_pred)
-print("AUC:\t", auc)
-acc, sens, spec, kappa = compute_metrics(y,y_pred)
-print("acc:\t", acc, "\nkappa:\t", kappa, "\nsens:\t", sens, "\nspec:\t", spec)
+x = np.memmap('Data-'+num+'/x_test.npy', dtype=np.uint8, mode='r', shape=(400000, 27, 27, 3))
+y = np.memmap('Data-'+num+'/y_test.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
 
-end_time = time.time()
-print('Time taken: ', end_time-start_time)
+print_metrics('plain', x, y)
+print_metrics('balanced', x, y)
+print_metrics('nopool', x, y)
+
+del x
+x = np.memmap('Data-'+num+'/x_gcn_test.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
+print_metrics('gcn', x, y)
+
+del x
+x = np.memmap('Data-'+num+'/x_zca_test.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
+print_metrics('zca', x, y)

@@ -58,7 +58,7 @@ def GCN(x, x_gcn):
             Ic = (Ic-np.mean(Ic))/max(np.std(Ic), 0.0000001)
             x_gcn[i,:,:,channel] = Ic
 
-'''
+
 shape = (400000, 27, 27, 3)
 flat_shape = (400000, shape[1]*shape[2]*shape[3])
 
@@ -130,7 +130,6 @@ del x_zca
 del x_augment
 
 os.remove('data/x_zca_augmentation.npy')
-'''
 
 print("Generating augmented labels:")
 
