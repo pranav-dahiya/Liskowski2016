@@ -16,15 +16,15 @@ def schedule(epoch, old_rate):
         return old_rate
 
 
-def train_model(name, x_train, y_train):
+def train_model(model_name, x_train, y_train):
     model = Sequential()
     model.add(Conv2D(64, kernel_size=4, activation='relu', input_shape=(27, 27, 3)))
     model.add(Conv2D(64, kernel_size=3, activation='relu', padding='same'))
-    if name != 'nopool':
+    if model_name != 'nopool':
         model.add(MaxPooling2D())
     model.add(Conv2D(128, kernel_size=3, activation='relu', padding='same'))
     model.add(Conv2D(128, kernel_size=3, activation='relu', padding='same'))
-    if name != 'nopool':
+    if model_name != 'nopool':
         model.add(MaxPooling2D())
     model.add(Flatten())
     model.add(Dense(512, activation='relu', kernel_initializer=normal(0, 0.01), kernel_regularizer=l2(0.0005)))
