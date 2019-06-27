@@ -48,7 +48,7 @@ def print_metrics(model_name, x, y):
         f.write(model_name+"\nAUC:\t"+str(auc)+"\nAcc:\t"+str(acc)+"\nKappa:\t"\
                     +str(kappa)+"\nSens:\t"+str(sens)+"\nSpec:\t"+str(spec)+"\n")
 
-num = '6'
+num = '7'
 
 x = np.memmap('Data-'+num+'/x_test.npy', dtype=np.uint8, mode='r', shape=(400000, 27, 27, 3))
 y = np.memmap('Data-'+num+'/y_test.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
