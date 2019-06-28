@@ -2,6 +2,14 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
+from keras.models import load_model
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+
+def schedule(epoch, old_rate):
+    if epoch == 6 or epoch == 12 or epoch == 18:
+        return old_rate/10
+    else:
+        return old_rate
 
 def normalize(I):
     return (I-np.min(I))/(np.max(I)-np.min(I))
@@ -40,7 +48,7 @@ cv2.imshow('patch',zca)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 print(patch.label)
-'''
+''''''
 x = np.memmap('data/x_test.npy', dtype=np.uint8, mode='r', shape=(400000, 27, 27, 3))
 gcn = np.memmap('data/x_gcn_test.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
 zca = np.memmap('data/x_zca_test.npy', dtype=np.float32, mode='r', shape=(400000, 27, 27, 3))
@@ -57,4 +65,12 @@ plt.subplot(325)
 plt.imshow(normalize(zca[1]))
 plt.subplot(326)
 plt.imshow(normalize(zca[18]))
-plt.show()
+plt.show()'''
+model_name = 'balanced'
+x_train = np.memmap('data/x_balanced_train.npy', dtype=np.uint8, mode='r', shape=(400000, 27, 27, 3))
+y_train = np.memmap('data/y_balanced_train.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
+model = load_model('data/'+model_name+'_checkpoint.keras')
+model.fit(x_train, y_train, batch_size=256, epochs=19, callbacks=[LearningRateScheduler(schedule, verbose=1), ModelCheckpoint('data/'+model_name+'_checkpoint.keras')], initial_epoch=10)
+model.save('data/'+model_name+'.keras')
+
+os.remove('data/'+model_name+'_checkpoint.keras')

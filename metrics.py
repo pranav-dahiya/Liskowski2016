@@ -10,6 +10,9 @@ config = tf.ConfigProto(intra_op_parallelism_threads=10, inter_op_parallelism_th
 sess = tf.Session(config=config)
 K.set_session(sess)
 '''
+
+num = '8'
+
 def compute_metrics(y_true, y_pred):
     TP,TN,FP,FN = 0,0,0,0
     p = np.sum(y_true[:,0])/y_true.shape[0]
@@ -44,11 +47,10 @@ def print_metrics(model_name, x, y):
     y_pred = model.predict(x)
     auc = metrics.roc_auc_score(y, y_pred)
     acc, sens, spec, kappa = compute_metrics(y,y_pred)
-    with open('Data-6/metrics.log', 'a') as f:
+    with open('Data-'+num+'/metrics.log', 'a') as f:
         f.write(model_name+"\nAUC:\t"+str(auc)+"\nAcc:\t"+str(acc)+"\nKappa:\t"\
                     +str(kappa)+"\nSens:\t"+str(sens)+"\nSpec:\t"+str(spec)+"\n")
 
-num = '7'
 
 x = np.memmap('Data-'+num+'/x_test.npy', dtype=np.uint8, mode='r', shape=(400000, 27, 27, 3))
 y = np.memmap('Data-'+num+'/y_test.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
