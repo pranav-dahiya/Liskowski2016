@@ -42,6 +42,12 @@ def train_model(model_name, x_train, y_train):
     os.remove('data/'+model_name+'_checkpoint.keras')
 
 
+def resume_training(model_name, x_train, y_train, initial_epoch):
+    model = load_model('data/'+model_name+'_checkpoint.keras')
+    model.fit(x_train, y_train, batch_size=256, epochs=19, callbacks=[LearningRateScheduler(schedule, verbose=1), ModelCheckpoint('data/'+model_name+'_checkpoint.keras')], initial_epoch=initial_epoch)
+    model.save('data/'+model_name+'.keras')
+    os.remove('data/'+model_name+'_checkpoint.keras')
+
 x_train = np.memmap('data/x_train.npy', dtype=np.uint8, mode='r', shape=(400000, 49, 49, 3))
 y_train = np.memmap('data/y_train.npy', dtype=np.uint8, mode='r', shape=(400000, 2))
 x_train = x_train[:,11:38,11:38,:]
