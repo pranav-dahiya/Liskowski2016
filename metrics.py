@@ -11,7 +11,7 @@ sess = tf.Session(config=config)
 K.set_session(sess)
 '''
 
-num = '8'
+num = '10'
 
 def compute_metrics(y_true, y_pred):
     TP,TN,FP,FN = 0,0,0,0
