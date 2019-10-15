@@ -8,6 +8,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 import os
 
+#This  is a comment
 
 def schedule(epoch, old_rate):
     if epoch == 6 or epoch == 12 or epoch == 18:
